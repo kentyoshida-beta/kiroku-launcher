@@ -46,6 +46,18 @@
       document.body.style.height = h + 'px';
     };
     fit();
+    // --- 一時的な診断表示(原因特定後に削除) ---
+    document.documentElement.style.background = '#7a1030';
+    document.body.style.background = '#7a1030';
+    var dbg = document.createElement('div');
+    dbg.style.cssText = 'position:fixed;left:4px;bottom:2px;font:10px/1.2 -apple-system,sans-serif;color:#ffd400;z-index:9;pointer-events:none';
+    document.documentElement.appendChild(dbg);
+    var show = function () {
+      var r = function (el) { var b = el.getBoundingClientRect(); return Math.round(b.top) + '-' + Math.round(b.bottom); };
+      dbg.textContent = 'ih' + innerHeight + ' sh' + screen.height + ' vv' + Math.round(window.visualViewport ? visualViewport.height : 0) +
+        ' sa' + (navigator.standalone ? 1 : 0) + ' body' + r(document.body) + ' top' + r(saTop) + ' ifr' + r(f) + ' bot' + r(saBottom);
+    };
+    setTimeout(show, 500); setTimeout(show, 2000); window.addEventListener('resize', function () { setTimeout(show, 100); });
     window.addEventListener('resize', fit);
     window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
   } else {
