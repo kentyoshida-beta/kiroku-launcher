@@ -10,9 +10,10 @@
 <meta name="apple-mobile-web-app-title" content="記録">
 <style>
   /* GASはiframe入れ子のため中でenv(safe-area-inset-*)が効かない → 外側で時刻表示/ホームバー分を確保 */
-  /* height:100%だと全画面表示のiOSで時刻表示の高さ分だけ短くなり下に隙間が出る → 画面四辺に固定 */
-  html, body { margin: 0; padding: 0; background: #ffffff; overflow: hidden; overscroll-behavior: none; }
-  body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; }
+  /* 全画面表示のiOSは表示領域を時刻表示の高さ分だけ短く報告し(852→793)、fixed要素もそこで切られる
+     → fixedを使わず通常配置にし、JSで実際の画面の高さを指定する */
+  html, body { margin: 0; padding: 0; height: 100%; background: #ffffff; overflow: hidden; overscroll-behavior: none; }
+  body { display: flex; flex-direction: column; }
   .sa-top { height: env(safe-area-inset-top); background: #0f766e; flex: none; }
   .sa-bottom { height: env(safe-area-inset-bottom); background: #ffffff; flex: none; }
   iframe { border: 0; width: 100%; flex: 1; min-height: 0; display: block; }
@@ -42,22 +43,12 @@
       if (!navigator.standalone) return;
       var portrait = window.innerHeight > window.innerWidth;
       var h = portrait ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
-      document.body.style.bottom = 'auto';
+      document.documentElement.style.height = h + 'px';
       document.body.style.height = h + 'px';
     };
     fit();
-    // --- 一時的な診断表示(原因特定後に削除) ---
+    // 確認用: 隙間が残っていれば赤紫で見える(解消を確認したら削除)
     document.documentElement.style.background = '#7a1030';
-    document.body.style.background = '#7a1030';
-    var dbg = document.createElement('div');
-    dbg.style.cssText = 'position:fixed;left:4px;bottom:2px;font:10px/1.2 -apple-system,sans-serif;color:#ffd400;z-index:9;pointer-events:none';
-    document.documentElement.appendChild(dbg);
-    var show = function () {
-      var r = function (el) { var b = el.getBoundingClientRect(); return Math.round(b.top) + '-' + Math.round(b.bottom); };
-      dbg.textContent = 'ih' + innerHeight + ' sh' + screen.height + ' vv' + Math.round(window.visualViewport ? visualViewport.height : 0) +
-        ' sa' + (navigator.standalone ? 1 : 0) + ' body' + r(document.body) + ' top' + r(saTop) + ' ifr' + r(f) + ' bot' + r(saBottom);
-    };
-    setTimeout(show, 500); setTimeout(show, 2000); window.addEventListener('resize', function () { setTimeout(show, 100); });
     window.addEventListener('resize', fit);
     window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
   } else {
