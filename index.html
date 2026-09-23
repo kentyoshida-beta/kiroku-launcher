@@ -10,13 +10,14 @@
 <meta name="apple-mobile-web-app-title" content="記録">
 <style>
   /* GASはiframe入れ子のため中でenv(safe-area-inset-*)が効かない → 外側で時刻表示/ホームバー分を確保 */
-  html, body { margin: 0; padding: 0; height: 100%; background: #f6f7f9; }
-  body { display: flex; flex-direction: column; }
+  /* height:100%だと全画面表示のiOSで時刻表示の高さ分だけ短くなり下に隙間が出る → 画面四辺に固定 */
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; }
   .sa-top { height: env(safe-area-inset-top); background: #0f766e; flex: none; }
   .sa-bottom { height: env(safe-area-inset-bottom); background: #ffffff; flex: none; }
   iframe { border: 0; width: 100%; flex: 1; min-height: 0; display: block; }
   @media (prefers-color-scheme: dark) {
-    html, body { background: #101418; }
+    html, body { background: #1a2026; }
     .sa-top { background: #134e4a; }
     .sa-bottom { background: #1a2026; }
   }
