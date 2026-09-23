@@ -37,6 +37,17 @@
     document.body.appendChild(saTop);
     document.body.appendChild(f);
     document.body.appendChild(saBottom);
+    // 全画面表示のiOSでは表示領域が時刻表示の高さ分だけ短く報告され、下に隙間が出る → 実際の画面の高さに合わせる
+    var fit = function () {
+      if (!navigator.standalone) return;
+      var portrait = window.innerHeight > window.innerWidth;
+      var h = portrait ? Math.max(screen.width, screen.height) : Math.min(screen.width, screen.height);
+      document.body.style.bottom = 'auto';
+      document.body.style.height = h + 'px';
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
   } else {
     document.body.innerHTML = '<div class="msg">アプリURLが見つかりません。<br>ホーム画面に追加するときは、共有されたURL(#付きの完全版)をそのまま開いてから追加してください。</div>';
   }
