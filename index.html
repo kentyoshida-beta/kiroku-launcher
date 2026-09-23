@@ -47,8 +47,6 @@
       document.body.style.height = h + 'px';
     };
     fit();
-    // 確認用: 隙間が残っていれば赤紫で見える(解消を確認したら削除)
-    document.documentElement.style.background = '#7a1030';
     window.addEventListener('resize', fit);
     window.addEventListener('orientationchange', function () { setTimeout(fit, 300); });
   } else {
