@@ -11,7 +11,7 @@
 <style>
   /* GASはiframe入れ子のため中でenv(safe-area-inset-*)が効かない → 外側で時刻表示/ホームバー分を確保 */
   /* height:100%だと全画面表示のiOSで時刻表示の高さ分だけ短くなり下に隙間が出る → 画面四辺に固定 */
-  html, body { margin: 0; padding: 0; background: #ffffff; }
+  html, body { margin: 0; padding: 0; background: #ffffff; overflow: hidden; overscroll-behavior: none; }
   body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; }
   .sa-top { height: env(safe-area-inset-top); background: #0f766e; flex: none; }
   .sa-bottom { height: env(safe-area-inset-bottom); background: #ffffff; flex: none; }
